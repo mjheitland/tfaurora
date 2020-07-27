@@ -49,6 +49,10 @@ terraform destroy -auto-approve
 
 * create an Aurora database across all subnets
 
+* security group for the Aurora cluster
+
+* security group for app servers - only ec2 instances with this sg are allowed to connect to our database
+
 These steps are done automatically if you deploy 2_database with Terraform:
 
 ```
@@ -82,6 +86,8 @@ terraform destroy -auto-approve
 
 # Links
 
+Origin of source code:
+
 * [Code taken from Github](https://github.com/terraform-aws-modules/terraform-aws-rds-aurora)
 
 These types of resources are supported:
@@ -96,7 +102,8 @@ Additional Information:
 * [Supported Postgres Versions](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.DBVersions)
 
 * [Connect to Aurora Database to test the connection](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html)
-Example:
+
+Example to connect from jump box to Aurora database:
 ```
 psql \
    --host=aurora-example-1.cbnlfy36tjpq.eu-central-1.rds.amazonaws.com \
