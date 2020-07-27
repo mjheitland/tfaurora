@@ -1,0 +1,107 @@
+# tfaurora - create Aurora database
+
+## Intro
+
+Install Aurora with Terraform
+
+## Layer 0 - Terraform Remote State (2 min)
+
+Set up remote state for Terraform creating a bucket for the state and a DynamoDB table for locking<br>
+(if you want to save TF state including this layer, run the commands twice and remove the comments for the backend in tfstate.tf on the second run)
+
+Terraform code:
+```
+cd 0_tfstate
+
+terraform init -backend-config=../backend.config
+
+terraform apply -auto-approve
+
+terraform destroy -auto-approve
+```
+
+## Layer 1 - Network (3 min)
+
+The following steps are done automatically if you deploy 1_network with Terraform:
+
+* create a VPC "tfaurora_vpc" 
+
+* create three public subnets across 3 AZs 
+
+* create Internet Gateway and attach the public subnets
+
+* create a route table to send the internet traffic to the internet gateway
+
+* create a security group to allow ssh from a dedicated local box (change ip address to your local box)
+
+Terraform code:
+```
+cd 1_network
+
+terraform init -backend-config=../backend.config
+
+terraform apply -auto-approve
+
+terraform destroy -auto-approve
+```
+
+## Layer 2 - Aurora Database (10 min)
+
+* create an Aurora database across all subnets
+
+These steps are done automatically if you deploy 2_database with Terraform:
+
+```
+cd 2_database
+
+terraform init -backend-config=../backend.config
+
+terraform apply -auto-approve
+
+terraform destroy -auto-approve
+```
+
+## Layer 3 - Compute (5 min)
+
+These steps are done automatically if you deploy 3_compute with Terraform:
+
+* create a key pair "IrelandEKS" in eu-central-1 and download the private key file "IrelandEKS.pem"<br>
+(with Terraform: use ssh-keygen if you do not have a private key in ~/.ssh/id_rsa)
+
+* deploy one jumpbox in every subnet to allow database connection tests
+
+```
+cd 3_compute
+
+terraform init -backend-config=../backend.config
+
+terraform apply -auto-approve
+
+terraform destroy -auto-approve
+```
+
+# Links
+
+* [Code taken from Github](https://github.com/terraform-aws-modules/terraform-aws-rds-aurora)
+
+These types of resources are supported:
+
+* [RDS Cluster](https://www.terraform.io/docs/providers/aws/r/rds_cluster.html)
+* [RDS Cluster Instance](https://www.terraform.io/docs/providers/aws/r/rds_cluster_instance.html)
+* [DB Subnet Group](https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html)
+* [Application AutoScaling Policy](https://www.terraform.io/docs/providers/aws/r/appautoscaling_policy.html)
+* [Application AutoScaling Target](https://www.terraform.io/docs/providers/aws/r/appautoscaling_target.html)
+
+Additional Information:
+* [Supported Postgres Versions](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.DBVersions)
+
+* [Connect to Aurora Database to test the connection](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html)
+Example:
+```
+psql \
+   --host=aurora-example-1.cbnlfy36tjpq.eu-central-1.rds.amazonaws.com \
+   --port=5432 \
+   --username=root \
+   --password \
+   --dbname=postgres
+```
