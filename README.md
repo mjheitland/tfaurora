@@ -72,7 +72,7 @@ These steps are done automatically if you deploy 3_compute with Terraform:
 * create a key pair "IrelandEKS" in eu-central-1 and download the private key file "IrelandEKS.pem"<br>
 (with Terraform: use ssh-keygen if you do not have a private key in ~/.ssh/id_rsa)
 
-* deploy one jumpbox in every subnet to allow database connection tests
+* deploy one jump box in every subnet to allow database connection tests
 
 ```
 cd 3_compute
@@ -82,6 +82,17 @@ terraform init -backend-config=../backend.config
 terraform apply -auto-approve
 
 terraform destroy -auto-approve
+```
+
+* Example to connect from jump box to Aurora database:
+
+```
+psql \
+   --host=aurora-example-1.cbnlfy36tjpq.eu-central-1.rds.amazonaws.com \
+   --port=5432 \
+   --username=root \
+   --password \
+   --dbname=postgres
 ```
 
 # Links
@@ -102,13 +113,3 @@ Additional Information:
 * [Supported Postgres Versions](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.DBVersions)
 
 * [Connect to Aurora Database to test the connection](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html)
-
-Example to connect from jump box to Aurora database:
-```
-psql \
-   --host=aurora-example-1.cbnlfy36tjpq.eu-central-1.rds.amazonaws.com \
-   --port=5432 \
-   --username=root \
-   --password \
-   --dbname=postgres
-```

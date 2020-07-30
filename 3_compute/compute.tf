@@ -17,7 +17,7 @@ data "terraform_remote_state" "tf_database" {
   backend = "s3"
   config = {
     bucket = var.bucket
-    key = "3_database.tfstate"
+    key = "2_database.tfstate"
     region = var.region
   }
 }
