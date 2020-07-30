@@ -159,13 +159,11 @@ output "rtpub1_id" {
 output "rtpub1assoc_id" {
   value = aws_main_route_table_association.rtpub1assoc.id
 }
-
-
-
-data "aws_subnet_ids" "all" {
-  vpc_id = aws_vpc.vpc1.id
-}
 output "aws_subnet_ids" {
-  value = data.aws_subnet_ids.all.ids
+  value = [
+    aws_subnet.subpub1.*.id[0],
+    aws_subnet.subpub2.*.id[0],
+    aws_subnet.subpub3.*.id[0],
+  ]
 }
 
