@@ -87,6 +87,9 @@ terraform destroy -auto-approve
 * Example to connect from jump box to Aurora database:
 
 ```
+ssh ec2-user@52.57.67.220 # ip address of one of the jump boxes
+
+# set host to one of the rds_cluster_instance_endpoints
 psql \
    --host=aurora-example-1.cbnlfy36tjpq.eu-central-1.rds.amazonaws.com \
    --port=5432 \
