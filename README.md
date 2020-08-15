@@ -13,7 +13,7 @@ Terraform code:
 ```
 cd 0_tfstate
 
-terraform init -backend-config=../backend.config
+terraform init
 
 terraform apply -auto-approve
 
@@ -45,7 +45,7 @@ terraform apply -auto-approve
 terraform destroy -auto-approve
 ```
 
-## Layer 2 - Aurora Database (10 min)
+## Layer 2 - Aurora Database (8 min)
 
 * create an Aurora database across all subnets
 
@@ -65,7 +65,7 @@ terraform apply -auto-approve
 terraform destroy -auto-approve
 ```
 
-## Layer 3 - Compute (5 min)
+## Layer 3 - Compute (1 min)
 
 These steps are done automatically if you deploy 3_compute with Terraform:
 
@@ -96,6 +96,14 @@ psql \
    --username=root \
    --password \
    --dbname=postgres
+
+CREATE DATABASE db1;
+
+SELECT datname FROM pg_database;
+
+...
+
+CTRL-d
 ```
 
 # Links
@@ -116,3 +124,5 @@ Additional Information:
 * [Supported Postgres Versions](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.DBVersions)
 
 * [Connect to Aurora Database to test the connection](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ConnectToPostgreSQLInstance.html)
+
+* [How to use psql to create and delete databses](https://dataguide.prisma.io/postgresql/create-and-delete-databases-and-tables)
