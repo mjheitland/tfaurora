@@ -62,7 +62,7 @@ module "aurora" {
   source                          = "../modules/aurora/"
   name                            = "aurora-example"
   engine                          = "aurora-postgresql"
-  engine_version                  = "10.5"
+  engine_version                  = "12.4"
   publicly_accessible             = false
   subnets                         = data.terraform_remote_state.tf_network.outputs.aws_subnet_ids # data.aws_subnet_ids.all.ids
   vpc_id                          = data.terraform_remote_state.tf_network.outputs.vpc1_id # data.aws_vpc.default.id

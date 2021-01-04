@@ -65,6 +65,8 @@ terraform apply -auto-approve
 terraform destroy -auto-approve
 ```
 
+* Note: In AWS console, click 'Modify' button to change master password for the db instance.*
+
 ## Layer 3 - Compute (1 min)
 
 These steps are done automatically if you deploy 3_compute with Terraform:
