@@ -62,7 +62,7 @@ module "aurora" {
   source                          = "../modules/aurora/"
   name                            = "aurora-example"
   engine                          = "aurora-postgresql"
-  engine_version                  = "12.4"
+  engine_version                  = "11.9"
   publicly_accessible             = false
   subnets                         = data.terraform_remote_state.tf_network.outputs.aws_subnet_ids # data.aws_subnet_ids.all.ids
   vpc_id                          = data.terraform_remote_state.tf_network.outputs.vpc1_id # data.aws_vpc.default.id
@@ -74,22 +74,22 @@ module "aurora" {
   instance_type                   = "db.r4.large"
   apply_immediately               = true
   skip_final_snapshot             = true
-  db_parameter_group_name         = aws_db_parameter_group.aurora_db_postgres96_parameter_group.id
-  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.aurora_cluster_postgres96_parameter_group.id
+  db_parameter_group_name         = aws_db_parameter_group.aurora_db_postgres_parameter_group.id
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.aurora_cluster_postgres_parameter_group.id
   storage_encrypted               = true
   //  enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
 }
 
-resource "aws_db_parameter_group" "aurora_db_postgres96_parameter_group" {
-  name        = "test-aurora-db-postgres10-parameter-group"
-  family      = "aurora-postgresql10"
-  description = "test-aurora-db-postgres10-parameter-group"
+resource "aws_db_parameter_group" "aurora_db_postgres_parameter_group" {
+  name        = "test-aurora-db-postgres11-parameter-group"
+  family      = "aurora-postgresql11"
+  description = "test-aurora-db-postgres11-parameter-group"
 }
 
-resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres96_parameter_group" {
-  name        = "test-aurora-postgres10-cluster-parameter-group"
-  family      = "aurora-postgresql10"
-  description = "test-aurora-postgres10-cluster-parameter-group"
+resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres_parameter_group" {
+  name        = "test-aurora-postgres11-cluster-parameter-group"
+  family      = "aurora-postgresql11"
+  description = "test-aurora-postgres11-cluster-parameter-group"
 }
 
 resource "aws_security_group" "app_servers" {
