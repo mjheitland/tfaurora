@@ -65,7 +65,7 @@ terraform apply -auto-approve
 terraform destroy -auto-approve
 ```
 
-* Note: In AWS console, click 'Modify' button to change master password for the db instance.*
+* Note: In AWS console, click 'Modify' button to change master password for the db instance and select 'Apply immediately'*
 
 ## Layer 3 - Compute (1 min)
 
@@ -105,7 +105,7 @@ SELECT datname FROM pg_database;
 
 ...
 
-CTRL-d
+CTRL-d (could be CMD-d on Mac)
 ```
 
 # Links
