@@ -27,7 +27,7 @@ variable "name" {
 variable "engine" {
   description = "Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql"
   type        = string
-  default     = "aurora-postgressql"
+  default     = "aurora-postgresql"
 }
 
 variable "engine_version" {
