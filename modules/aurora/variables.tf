@@ -1,3 +1,9 @@
+variable "create_cluster" {
+  description = "Controls if RDS cluster should be created (it affects almost all resources)"
+  type        = bool
+  default     = true
+}
+
 variable "create_security_group" {
   description = "Whether to create security group for RDS cluster"
   type        = bool
@@ -7,6 +13,7 @@ variable "create_security_group" {
 variable "name" {
   description = "Name given resources"
   type        = string
+  default     = ""
 }
 
 variable "subnets" {
@@ -17,6 +24,7 @@ variable "subnets" {
 
 variable "replica_count" {
   description = "Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead."
+  type        = number
   default     = 1
 }
 
@@ -35,11 +43,19 @@ variable "allowed_cidr_blocks" {
 variable "vpc_id" {
   description = "VPC ID"
   type        = string
+  default     = ""
+}
+
+variable "instance_type_replica" {
+  description = "Instance type to use at replica instance"
+  type        = string
+  default     = null
 }
 
 variable "instance_type" {
-  description = "Instance type to use"
+  description = "Instance type to use at master instance. If instance_type_replica is not set it will use the same type for replica instances"
   type        = string
+  default     = ""
 }
 
 variable "publicly_accessible" {
@@ -64,6 +80,12 @@ variable "password" {
   description = "Master DB password"
   type        = string
   default     = ""
+}
+
+variable "is_primary_cluster" {
+  description = "Whether to create a primary cluster (set to false to be a part of a Global database)"
+  type        = bool
+  default     = true
 }
 
 variable "final_snapshot_identifier_prefix" {
@@ -112,6 +134,18 @@ variable "apply_immediately" {
   description = "Determines whether or not any DB modifications are applied immediately, or during the maintenance window"
   type        = bool
   default     = false
+}
+
+variable "monitoring_role_arn" {
+  description = "IAM role for RDS to send enhanced monitoring metrics to CloudWatch"
+  type        = string
+  default     = ""
+}
+
+variable "create_monitoring_role" {
+  description = "Whether to create the IAM role for RDS enhanced monitoring"
+  type        = bool
+  default     = true
 }
 
 variable "monitoring_interval" {
@@ -266,11 +300,13 @@ variable "engine_mode" {
 
 variable "replication_source_identifier" {
   description = "ARN of a source DB cluster or DB instance if this DB cluster is to be created as a Read Replica."
+  type        = string
   default     = ""
 }
 
 variable "source_region" {
   description = "The source region for an encrypted replica DB cluster."
+  type        = string
   default     = ""
 }
 
@@ -288,6 +324,7 @@ variable "db_subnet_group_name" {
 
 variable "predefined_metric_type" {
   description = "The metric type to scale on. Valid values are RDSReaderAverageCPUUtilization and RDSReaderAverageDatabaseConnections."
+  type        = string
   default     = "RDSReaderAverageCPUUtilization"
 }
 
@@ -325,4 +362,10 @@ variable "ca_cert_identifier" {
   description = "The identifier of the CA certificate for the DB instance"
   type        = string
   default     = "rds-ca-2019"
+}
+
+variable "instances_parameters" {
+  description = "Customized instance settings. Supported keys: instance_name, instance_type, instance_promotion_tier, publicly_accessible"
+  type        = list(map(string))
+  default     = []
 }

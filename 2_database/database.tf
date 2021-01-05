@@ -63,7 +63,6 @@ module "aurora" {
   name                            = "aurora-example"
   engine                          = "aurora-postgresql"
   engine_version                  = "11.9"
-  publicly_accessible             = false
   subnets                         = data.terraform_remote_state.tf_network.outputs.aws_subnet_ids # data.aws_subnet_ids.all.ids
   vpc_id                          = data.terraform_remote_state.tf_network.outputs.vpc1_id # data.aws_vpc.default.id
   replica_count                   = 1
@@ -72,6 +71,7 @@ module "aurora" {
   replica_scale_max               = 5
   monitoring_interval             = 60
   instance_type                   = "db.r4.large"
+  instance_type_replica           = "db.t3.large"
   apply_immediately               = true
   skip_final_snapshot             = true
   db_parameter_group_name         = aws_db_parameter_group.aurora_db_postgres_parameter_group.id
