@@ -71,7 +71,7 @@ terraform destroy -auto-approve
 
 These steps are done automatically if you deploy 3_compute with Terraform:
 
-* create a key pair "IrelandEKS" in eu-central-1 and download the private key file "IrelandEKS.pem"<br>
+* create a key pair "MyAuroraKey" in eu-central-1 and download the private key file "MyAuroraKey.pem"<br>
 (with Terraform: use ssh-keygen if you do not have a private key in ~/.ssh/id_rsa)
 
 * deploy one jump box in every subnet to allow database connection tests

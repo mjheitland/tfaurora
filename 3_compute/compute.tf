@@ -62,7 +62,7 @@ variable "bucket" {
 variable "key_name" {
   description = "name of keypair to access ec2 instances"
   type        = string
-  default     = "IrelandEKS"
+  default     = "MyAuroraKey"
 }
 
 variable "public_key_path" {
