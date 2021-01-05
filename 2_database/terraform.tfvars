@@ -5,6 +5,7 @@ bucket                = "tfstate-tfaurora-094033154904-eu-central-1"
 name                  = "aurora-example"
 engine                = "aurora-postgresql"
 engine_version        = "11.9"
+family                = "aurora-postgresql11"
 replica_count         = 1
 replica_scale_enabled = true
 replica_scale_min     = 1

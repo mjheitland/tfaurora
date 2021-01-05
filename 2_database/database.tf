@@ -36,6 +36,12 @@ variable "engine_version" {
   default     = "11.9"
 }
 
+variable "family" {
+  description = "db family"
+  type        = string
+  default     = "aurora-postgresql11"
+}
+
 variable "replica_count" {
   description = "Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead."
   type        = number
@@ -131,32 +137,32 @@ module "aurora" {
   db_parameter_group_name         = aws_db_parameter_group.aurora_db_postgres_parameter_group.id
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.aurora_cluster_postgres_parameter_group.id
 
-  name                            = "aurora-example"
-  engine                          = "aurora-postgresql"
-  engine_version                  = "11.9"
-  replica_count                   = 1
-  replica_scale_enabled           = true
-  replica_scale_min               = 1
-  replica_scale_max               = 5
-  monitoring_interval             = 60
-  instance_type                   = "db.r4.large"
-  instance_type_replica           = "db.t3.large"
-  apply_immediately               = true
-  skip_final_snapshot             = true
-  storage_encrypted               = true
+  name                            = var.name
+  engine                          = var.engine
+  engine_version                  = var.engine_version
+  replica_count                   = var.replica_count
+  replica_scale_enabled           = var.replica_scale_enabled
+  replica_scale_min               = var.replica_scale_min
+  replica_scale_max               = var.replica_scale_max
+  monitoring_interval             = var.monitoring_interval
+  instance_type                   = var.instance_type
+  instance_type_replica           = var.instance_type_replica
+  apply_immediately               = var.apply_immediately
+  skip_final_snapshot             = var.skip_final_snapshot
+  storage_encrypted               = var.storage_encrypted
   //  enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
 }
 
 resource "aws_db_parameter_group" "aurora_db_postgres_parameter_group" {
-  name        = "test-aurora-db-postgres11-parameter-group"
-  family      = "aurora-postgresql11"
-  description = "test-aurora-db-postgres11-parameter-group"
+  name        = "test-aurora-db-postgres-parameter-group"
+  family      = var.family
+  description = "test-aurora-db-postgres-parameter-group"
 }
 
 resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres_parameter_group" {
-  name        = "test-aurora-postgres11-cluster-parameter-group"
-  family      = "aurora-postgresql11"
-  description = "test-aurora-postgres11-cluster-parameter-group"
+  name        = "test-aurora-postgres-cluster-parameter-group"
+  family      = var.family
+  description = "test-aurora-postgres-cluster-parameter-group"
 }
 
 resource "aws_security_group" "app_servers" {
