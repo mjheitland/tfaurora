@@ -105,7 +105,7 @@ SELECT datname FROM pg_database;
 
 ...
 
-CTRL-d (could be CMD-d on Mac)
+To quit psql: \q or CTRL-d (could be CMD-d on Mac)
 ```
 
 # Links
