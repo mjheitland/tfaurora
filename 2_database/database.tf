@@ -14,20 +14,86 @@ variable "region" {
   type        = string
 }
 
-variable bucket {
+variable "bucket" {
   description = "S3 bucket to store TF remote state"
   type        = string
 }
 
-variable "key_name" {
-  description = "name of keypair to access ec2 instances"
+variable "name" {
+  description = "Name given resources"
   type        = string
-  default     = "IrelandEKS"
 }
 
-variable "public_key_path" {
-  description = "file path on deployment machine to public rsa key to access ec2 instances"
+variable "engine" {
+  description = "Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql"
   type        = string
+  default     = "aurora-postgressql"
+}
+
+variable "engine_version" {
+  description = "Aurora database engine version."
+  type        = string
+  default     = "11.9"
+}
+
+variable "replica_count" {
+  description = "Number of reader nodes to create.  If `replica_scale_enable` is `true`, the value of `replica_scale_min` is used instead."
+  type        = number
+  default     = 1
+}
+
+variable "replica_scale_enabled" {
+  description = "Whether to enable autoscaling for RDS Aurora (MySQL) read replicas"
+  type        = bool
+  default     = false
+}
+
+variable "replica_scale_min" {
+  description = "Minimum number of replicas to allow scaling for"
+  type        = number
+  default     = 2
+}
+
+variable "replica_scale_max" {
+  description = "Maximum number of replicas to allow scaling for"
+  type        = number
+  default     = 0
+}
+
+variable "monitoring_interval" {
+  description = "The interval (seconds) between points when Enhanced Monitoring metrics are collected"
+  type        = number
+  default     = 0
+}
+
+variable "instance_type" {
+  description = "Instance type to use at master instance. If instance_type_replica is not set it will use the same type for replica instances"
+  type        = string
+  default     = ""
+}
+
+variable "instance_type_replica" {
+  description = "Instance type to use at replica instance"
+  type        = string
+  default     = null
+}
+
+variable "apply_immediately" {
+  description = "Determines whether or not any DB modifications are applied immediately, or during the maintenance window"
+  type        = bool
+  default     = false
+}
+
+variable "skip_final_snapshot" {
+  description = "Should a final snapshot be created on cluster destroy"
+  type        = bool
+  default     = false
+}
+
+variable "storage_encrypted" {
+  description = "Specifies whether the underlying storage layer should be encrypted"
+  type        = bool
+  default     = true
 }
 
 
@@ -60,11 +126,14 @@ data "terraform_remote_state" "tf_network" {
 #############
 module "aurora" {
   source                          = "../modules/aurora/"
+  subnets                         = data.terraform_remote_state.tf_network.outputs.aws_subnet_ids # data.aws_subnet_ids.all.ids
+  vpc_id                          = data.terraform_remote_state.tf_network.outputs.vpc1_id # data.aws_vpc.default.id
+  db_parameter_group_name         = aws_db_parameter_group.aurora_db_postgres_parameter_group.id
+  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.aurora_cluster_postgres_parameter_group.id
+
   name                            = "aurora-example"
   engine                          = "aurora-postgresql"
   engine_version                  = "11.9"
-  subnets                         = data.terraform_remote_state.tf_network.outputs.aws_subnet_ids # data.aws_subnet_ids.all.ids
-  vpc_id                          = data.terraform_remote_state.tf_network.outputs.vpc1_id # data.aws_vpc.default.id
   replica_count                   = 1
   replica_scale_enabled           = true
   replica_scale_min               = 1
@@ -74,8 +143,6 @@ module "aurora" {
   instance_type_replica           = "db.t3.large"
   apply_immediately               = true
   skip_final_snapshot             = true
-  db_parameter_group_name         = aws_db_parameter_group.aurora_db_postgres_parameter_group.id
-  db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.aurora_cluster_postgres_parameter_group.id
   storage_encrypted               = true
   //  enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
 }
