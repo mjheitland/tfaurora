@@ -4,22 +4,22 @@
 #--- Variables
 #-------------
 
-variable project {
+variable "project" {
   description = "Project name is used as namespace for Terraform remote state and other resources."
   type        = string
 }
 
-variable region {
+variable "region" {
   description = "AWS region we are deploying to"
   type        = string
 }
 
-variable bucket {
+variable "bucket" {
   description = "S3 bucket to store TF remote state"
   type        = string
 }
 
-variable dynamodb_table {
+variable "dynamodb_table" {
   description = "DynamoDB table to store TF remote state lock"
   type        = string
 }
