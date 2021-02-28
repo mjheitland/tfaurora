@@ -1,4 +1,4 @@
-# tfaurora - create Aurora database
+# tfaurora - create Aurora database and a ec2 db jumpbox to test the db connection
 
 ## Intro
 

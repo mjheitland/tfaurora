@@ -1,2 +1,2 @@
-project        = "tfaurora"
-region         = "eu-central-1"
+project = "tfaurora"
+region  = "eu-central-1"

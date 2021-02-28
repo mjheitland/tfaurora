@@ -75,7 +75,6 @@ variable "monitoring_interval" {
 variable "instance_type" {
   description = "Instance type to use at master instance. If instance_type_replica is not set it will use the same type for replica instances"
   type        = string
-  default     = ""
 }
 
 variable "instance_type_replica" {

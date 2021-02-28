@@ -4,6 +4,13 @@
 #--- Data Providers
 #------------------
 
+data "template_file" "userdata" {
+  template = file("${path.module}/userdata.tpl")
+  vars = {
+    subnet = "element(data.terraform_remote_state.tf_network.outputs.aws_subnet_ids, count.index)"
+  }
+}
+
 data "terraform_remote_state" "tf_network" {
   backend = "s3"
   config = {
@@ -27,7 +34,7 @@ data "aws_ami" "amazon_linux_2" {
   owners = ["amazon"]
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-*"]
+    values = ["amzn2-ami-hvm-2.0.*-x86_64-gp2"]
   }
   filter {
       name   = "root-device-type"
@@ -36,6 +43,10 @@ data "aws_ami" "amazon_linux_2" {
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
+  }  
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
   }  
 }  
 
@@ -70,23 +81,26 @@ variable "public_key_path" {
   type        = string
 }
 
+variable "jumpbox_instance_type" {
+  description = "Instance type to use at master instance. If instance_type_replica is not set it will use the same type for replica instances"
+  type        = string
+}
+
+
+#-------------
+#--- Resources
+#-------------
+
 resource "aws_key_pair" "keypair" {
   key_name   = var.key_name
   public_key = file(var.public_key_path)
 }
 
-data "template_file" "userdata" {
-  template = file("${path.module}/userdata.tpl")
-  vars = {
-    subnet = "element(data.terraform_remote_state.tf_network.outputs.aws_subnet_ids, count.index)"
-  }
-}
-
 resource "aws_instance" "jumpbox" {
   count = length(data.terraform_remote_state.tf_network.outputs.aws_subnet_ids)
 
-  instance_type           = "t3.micro"
-  ami                     = data.aws_ami.amazon_linux_2.id
+  instance_type           = var.jumpbox_instance_type
+  ami                     = data.aws_ami.amazon_linux_2.id # for Frankfurt Feb 2021 it would be "ami-02f9ea74050d6f812" 
   key_name                = aws_key_pair.keypair.id
   subnet_id               = sort(data.terraform_remote_state.tf_network.outputs.aws_subnet_ids)[count.index]
   vpc_security_group_ids  = [
