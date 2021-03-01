@@ -105,7 +105,8 @@ resource "aws_instance" "jumpbox" {
   subnet_id               = sort(data.terraform_remote_state.tf_network.outputs.aws_subnet_ids)[count.index]
   vpc_security_group_ids  = [
                               data.terraform_remote_state.tf_network.outputs.sg_jumpbox,
-                              data.terraform_remote_state.tf_database.outputs.sg_app_servers
+                              data.terraform_remote_state.tf_database.outputs.sg_app_servers,
+                              data.terraform_remote_state.tf_database.outputs.sg_app_servers_2
                             ]
   user_data               = data.template_file.userdata.*.rendered[0]
   tags = { 

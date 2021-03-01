@@ -115,7 +115,7 @@ resource "aws_security_group" "sg_jumpbox" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["54.239.6.185/32"]
+    cidr_blocks = ["0.0.0.0/0"] # better to restrict to a specific ip of the box from where you are connecting to the jump box, e.g. ["54.239.6.185/32"]
   }
   egress {
     from_port   = 0
