@@ -4,6 +4,8 @@
 #--- Variables
 #-------------
 
+#--- General
+
 variable "project" {
   description = "project name is used as resource tag"
   type        = string
@@ -23,6 +25,8 @@ variable "name" {
   description = "Name given resources"
   type        = string
 }
+
+#--- DB
 
 variable "engine" {
   description = "Aurora database engine type, currently aurora, aurora-mysql or aurora-postgresql"
