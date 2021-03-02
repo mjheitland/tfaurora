@@ -30,12 +30,15 @@ SELECT datname FROM pg_database;
 -- create a schema (i.e. db namespace) and a table and insert a row
 CREATE SCHEMA myschema
    CREATE TABLE mytable(
-      id INT NOT NULL, 
+      id INT PRIMARY KEY, 
       name VARCHAR(20) NOT NULL
    );
 
 -- server 1 only
 INSERT INTO myschema.mytable VALUES (1, 'Smith');
+
+-- check table content
+SELECT * FROM myschema.mytable;
 
 -- server 2 only
 TRUNCATE myschema.mytable;

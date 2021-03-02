@@ -178,10 +178,11 @@ resource "aws_dms_replication_instance" "dms_replication_instance" {
     project     = var.project
   }
 
+  # comment the third line out if you are setting up only one db!
   vpc_security_group_ids = [
     data.terraform_remote_state.tf_network.outputs.sg_jumpbox,
     data.terraform_remote_state.tf_database.outputs.sg_app_servers,
-    data.terraform_remote_state.tf_database.outputs.sg_app_servers_2 # comment this line out if you are setting up only one db!
+    data.terraform_remote_state.tf_database.outputs.sg_app_servers_2
   ]  
 }
 
