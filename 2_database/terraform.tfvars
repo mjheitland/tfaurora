@@ -7,7 +7,7 @@ bucket                = "tfstate-tfaurora-094033154904-eu-central-1"
 
 # Aurora database
 
-name                  = "aurora-example"
+name                  = "tfaurora-example"
 engine                = "aurora-postgresql"
 engine_version        = "12.4"
 family                = "aurora-postgresql12"
@@ -25,7 +25,7 @@ storage_encrypted     = true
 
 # Aurora database 2
 
-name_2                  = "aurora2-example"
+name_2                  = "tfaurora2-example"
 engine_2                = "aurora-postgresql"
 engine_version_2        = "12.4"
 family_2                = "aurora-postgresql12"

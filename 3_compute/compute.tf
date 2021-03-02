@@ -106,7 +106,7 @@ resource "aws_instance" "jumpbox" {
   vpc_security_group_ids  = [
                               data.terraform_remote_state.tf_network.outputs.sg_jumpbox,
                               data.terraform_remote_state.tf_database.outputs.sg_app_servers,
-                              data.terraform_remote_state.tf_database.outputs.sg_app_servers_2
+                              data.terraform_remote_state.tf_database.outputs.sg_app_servers_2 # comment this line out if you are setting up only one db!
                             ]
   user_data               = data.template_file.userdata.*.rendered[0]
   tags = { 

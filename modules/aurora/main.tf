@@ -9,7 +9,7 @@ locals {
 
   rds_security_group_id = join("", aws_security_group.this.*.id)
 
-  name = "aurora-${var.name}"
+  name = "${var.name}"
 }
 
 # Random string to use as master password unless one is specified

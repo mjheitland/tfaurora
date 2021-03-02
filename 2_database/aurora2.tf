@@ -139,11 +139,17 @@ resource "aws_rds_cluster_parameter_group" "aurora_cluster_postgres_parameter_gr
 }
 
 resource "aws_security_group" "app_servers_2" {
-  name        = "app-servers_2"
-  description = "For application servers"
+  name        = "app_servers_2"
+  description = "Allow db traffic only from ec2 boxes with this security group"
   vpc_id      = data.terraform_remote_state.tf_network.outputs.vpc1_id # data.aws_vpc.default.id
+
+  tags = { 
+    Name = format("%s_app_servers_2", var.project)
+    project = var.project
+  }
 }
 
+# sg rule for db to allow only incoming traffic from sources attached to ec2 instances with app_servers_2 sg attachment.
 resource "aws_security_group_rule" "allow_access_2" {
   type                     = "ingress"
   from_port                = module.aurora2.this_rds_cluster_port
