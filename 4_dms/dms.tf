@@ -13,8 +13,21 @@ data "terraform_remote_state" "tf_network" {
   }
 }
 
+data "terraform_remote_state" "tf_database" {
+  backend = "s3"
+  config = {
+    bucket = var.bucket
+    key = "2_database.tfstate"
+    region = var.region
+  }
+}
+
 data "local_file" "dms_replication_task_settings" {
   filename = "${path.module}/resources/dms_replication_task_settings.tmpl"
+}
+
+data "local_file" "dms_table_mappings" {
+  filename = "${path.module}/resources/dms_table_mappings_1.json"
 }
 
 #-------------
@@ -164,6 +177,12 @@ resource "aws_dms_replication_instance" "dms_replication_instance" {
     Name        = "${var.project}_dms_replication_instance"
     project     = var.project
   }
+
+  vpc_security_group_ids = [
+    data.terraform_remote_state.tf_network.outputs.sg_jumpbox,
+    data.terraform_remote_state.tf_database.outputs.sg_app_servers,
+    data.terraform_remote_state.tf_database.outputs.sg_app_servers_2 # comment this line out if you are setting up only one db!
+  ]  
 }
 
 resource "aws_dms_endpoint" "dms_source_endpoint" {
@@ -204,14 +223,14 @@ resource "aws_dms_endpoint" "dms_target_endpoint" {
 }
 
 resource "aws_dms_replication_task" "dms_replication_task" {
-  migration_type           = "full-load-and-cdc"
+  migration_type           = "full-load"
   replication_instance_arn = aws_dms_replication_instance.dms_replication_instance.replication_instance_arn
   replication_task_id      = "dms-replication-task-${random_id.id.hex}"
 
   source_endpoint_arn = aws_dms_endpoint.dms_source_endpoint.endpoint_arn
   target_endpoint_arn = aws_dms_endpoint.dms_target_endpoint.endpoint_arn
 
-  table_mappings            = "{\"rules\":[{\"rule-type\":\"selection\",\"rule-id\":\"1\",\"rule-name\":\"1\",\"object-locator\":{\"schema-name\":\"%\",\"table-name\":\"%\"},\"rule-action\":\"include\"}]}"
+  table_mappings            = data.local_file.dms_table_mappings.content
   replication_task_settings = data.local_file.dms_replication_task_settings.content
 
   tags = {
