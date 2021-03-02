@@ -34,8 +34,13 @@ CREATE SCHEMA myschema
       name VARCHAR(20) NOT NULL
    );
 
+-- server 1 only
 INSERT INTO myschema.mytable VALUES (1, 'Smith');
 
+-- server 2 only
+TRUNCATE myschema.mytable;
+
+-- check table content
 SELECT * FROM myschema.mytable;
 
 -- list all non-system tables
