@@ -13,7 +13,7 @@ source_database_password  = "HilWelMicWal"
 source_port               = "5432"
 
 target_engine_name        = "aurora-postgresql"
-target_database_host      = "tfaurora2-example-1"
+target_database_host      = "tfaurora2-example-1.cbnlfy36tjpq.eu-central-1.rds.amazonaws.com"
 target_database_name      = "mydb1"
 target_database_username  = "root"
 target_database_password  = "HilWelMicWal"
