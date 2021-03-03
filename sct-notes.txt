@@ -1,0 +1,5 @@
+curl https://s3.amazonaws.com/publicsctdownload/Ubuntu/aws-schema-conversion-tool-1.0.latest.zip --output sct.zip
+unzip sct.zip
+sudo dpkg -i aws-schema-conversion-tool-1.0.648.deb
+
+curl https://jdbc.postgresql.org/download/postgresql-42.2.19.jar --output postgresql-42.2.19.jar

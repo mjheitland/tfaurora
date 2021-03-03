@@ -29,6 +29,28 @@ data "terraform_remote_state" "tf_database" {
   }
 }
 
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners = ["099720109477"]
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-*"]
+  }
+  filter {
+      name   = "root-device-type"
+      values = ["ebs"]
+    }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }  
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }  
+}  
+
 data "aws_ami" "amazon_linux_2" {
   most_recent = true
   owners = ["amazon"]
@@ -116,6 +138,24 @@ resource "aws_instance" "jumpbox" {
 }
 
 
+resource "aws_instance" "jumpbox_ubuntu" {
+  instance_type           = var.jumpbox_instance_type
+  ami                     = data.aws_ami.ubuntu.id # for Frankfurt Feb 2021 it would be "ami-02f9ea74050d6f812" 
+  key_name                = aws_key_pair.keypair.id
+  subnet_id               = sort(data.terraform_remote_state.tf_network.outputs.aws_subnet_ids)[0]
+  vpc_security_group_ids  = [
+                              data.terraform_remote_state.tf_network.outputs.sg_jumpbox,
+                              data.terraform_remote_state.tf_database.outputs.sg_app_servers,
+                              data.terraform_remote_state.tf_database.outputs.sg_app_servers_2 # comment this line out if you are setting up only one db!
+                            ]
+  # user_data               = data.template_file.userdata.*.rendered[0]
+  tags = { 
+    Name = format("%s_jumpbox_ubuntu", var.project)
+    project = var.project
+  }
+}
+
+
 #-----------
 #--- Outputs
 #-----------
@@ -130,4 +170,8 @@ output "jumpbox_ids" {
 
 output "jumpbox_public_ips" {
   value = join(", ", aws_instance.jumpbox.*.public_ip)
+}
+
+output "jumpbox_ubuntu_public_ips" {
+  value = aws_instance.jumpbox_ubuntu.public_ip
 }
