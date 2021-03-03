@@ -189,13 +189,13 @@ resource "aws_dms_replication_instance" "dms_replication_instance" {
 resource "aws_dms_endpoint" "dms_source_endpoint" {
   endpoint_id                 = "dms-source-endpoint-${random_id.id.hex}"
   endpoint_type               = "source"
-  engine_name                 = var.source_engine_name
+  engine_name                 = var.source_engine_name == "" ? data.terraform_remote_state.tf_database.outputs.engine : var.source_engine_name
   extra_connection_attributes = var.dms_extra_connection_attributes
-  server_name                 = var.source_database_host
+  server_name                 = var.source_database_host == "" ? data.terraform_remote_state.tf_database.outputs.rds_cluster_instance_endpoints[0] : var.source_database_host
   database_name               = var.source_database_name
   username                    = var.source_database_username
   password                    = var.source_database_password
-  port                        = var.source_port
+  port                        = var.source_port == -1 ? data.terraform_remote_state.tf_database.outputs.rds_cluster_port : var.source_port
   ssl_mode                    = var.ssl_mode
 
   tags = {
@@ -208,13 +208,13 @@ resource "aws_dms_endpoint" "dms_source_endpoint" {
 resource "aws_dms_endpoint" "dms_target_endpoint" {
   endpoint_id                 = "dms-target-endpoint-${random_id.id.hex}"
   endpoint_type               = "target"
-  engine_name                 = var.target_engine_name
+  engine_name                 = var.target_engine_name == "" ? data.terraform_remote_state.tf_database.outputs.engine_2 : var.target_engine_name
   extra_connection_attributes = var.dms_extra_connection_attributes
-  server_name                 = var.target_database_host
+  server_name                 = var.target_database_host == "" ? data.terraform_remote_state.tf_database.outputs.rds_cluster_instance_endpoints_2[0] : var.target_database_host
   database_name               = var.target_database_name
   username                    = var.target_database_username
   password                    = var.target_database_password
-  port                        = var.target_port
+  port                        = var.target_port == -1 ? data.terraform_remote_state.tf_database.outputs.rds_cluster_port_2 : var.target_port
   ssl_mode                    = var.ssl_mode
 
   tags = {
