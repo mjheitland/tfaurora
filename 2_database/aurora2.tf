@@ -225,3 +225,23 @@ output "sg_app_servers_2" {
   description = "The security group ID of the app servers - only ec2s with this sg can connect to the db!"
   value       = aws_security_group.app_servers_2.id
 }
+
+output "engine_2" {
+  description = "Name of the RDS database engine (e.g. 'aurora-postgresql')"
+  value       = var.engine_2
+}
+
+output "engine_version_2" {
+  description = "Version number of the RDS database engine"
+  value       = var.engine_version_2
+}
+
+output "instance_type_2" {
+  description = "ec2 instance type of the primary database"
+  value       = var.instance_type_2
+}
+
+output "instance_type_replica_2" {
+  description = "ec2 instance type of the read replica database"
+  value       = var.instance_type_replica_2
+}
