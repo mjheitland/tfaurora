@@ -31,8 +31,12 @@ SELECT datname FROM pg_database;
 CREATE SCHEMA myschema
    CREATE TABLE mytable(
       id INT PRIMARY KEY, 
-      name VARCHAR(20) NOT NULL
+      surname VARCHAR(20) NOT NULL
    );
+
+-- check table structure
+SELECT column_name, data_type, character_maximum_length
+FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name ='mytable';   
 
 -- server 1 only
 INSERT INTO myschema.mytable VALUES (1, 'Smith');
