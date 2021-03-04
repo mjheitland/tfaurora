@@ -21,6 +21,7 @@ instance_type_replica = "db.t3.large"
 apply_immediately     = true
 skip_final_snapshot   = true
 storage_encrypted     = true
+publicly_accessible   = true
 
 
 # Aurora database 2
@@ -39,3 +40,4 @@ instance_type_replica_2 = "db.t3.large"
 apply_immediately_2     = true
 skip_final_snapshot_2   = true
 storage_encrypted_2     = true
+publicly_accessible_2   = true

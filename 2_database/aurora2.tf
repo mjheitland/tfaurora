@@ -88,6 +88,11 @@ variable "storage_encrypted_2" {
   default     = true
 }
 
+variable "publicly_accessible_2" {
+  description = "Is db reachable from outside?"
+  type        = bool
+  default     = false
+}
 
 ######################################
 # Data sources to get VPC and subnets
@@ -123,6 +128,7 @@ module "aurora2" {
   apply_immediately               = var.apply_immediately_2
   skip_final_snapshot             = var.skip_final_snapshot_2
   storage_encrypted               = var.storage_encrypted_2
+  publicly_accessible             = var.publicly_accessible_2
   //  enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
 }
 

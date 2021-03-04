@@ -105,6 +105,12 @@ variable "storage_encrypted" {
   default     = true
 }
 
+variable "publicly_accessible" {
+  description = "Is db reachable from outside?"
+  type        = bool
+  default     = false
+}
+
 
 #------------------
 #--- Data Providers
@@ -153,6 +159,8 @@ module "aurora" {
   apply_immediately               = var.apply_immediately
   skip_final_snapshot             = var.skip_final_snapshot
   storage_encrypted               = var.storage_encrypted
+  publicly_accessible             = var.publicly_accessible
+
   //  enabled_cloudwatch_logs_exports = ["audit", "error", "general", "slowquery"]
 }
 
